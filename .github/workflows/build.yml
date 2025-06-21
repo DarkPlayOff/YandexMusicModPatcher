@@ -48,7 +48,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: built-packages-${{ matrix.os }}
-        files: |
+        path: |
             out/make/**/*
             !out/make/**/RELEASES
         retention-days: 7
