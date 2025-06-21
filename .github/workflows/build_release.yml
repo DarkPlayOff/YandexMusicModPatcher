@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Clone YandexMusicModPatcher
       run: |
-        git clone https://github.com/TheKing-Of-Time/YandexMusicModPatcher modified-repo
+        git clone https://github.com/TheKing-OfTime/YandexMusicModPatcher modified-repo
       
     - name: Modify LATEST_RELEASE_URL (Linux/Windows)
       if: matrix.os != 'macos-latest'
