@@ -5,7 +5,10 @@ on:
 
 jobs:
   modify-and-build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     
     steps:
     - name: Clone YandexMusicModPatcher
@@ -14,14 +17,14 @@ jobs:
       
     - name: Modify LATEST_RELEASE_URL
       run: |
-        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' modified-repo/src/main/patcher.js
-        grep "LATEST_RELEASE_URL" modified-repo/src/main/patcher.js
+        cd modified-repo
+        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
+        grep "LATEST_RELEASE_URL" src/main/patcher.js
     
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 20
-        working-directory: ./modified-repo
     
     - name: Install dependencies
       run: |
@@ -29,4 +32,13 @@ jobs:
         npm i
     
     - name: Build packages
-      uses: ./.modified-repo/workflows/build.yml
+      run: |
+        cd modified-repo
+        npm run make
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: built-packages-${{ matrix.os }}
+        path: modified-repo/out/make/**/*
+        retention-days: 7
