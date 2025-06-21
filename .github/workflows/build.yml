@@ -1,0 +1,32 @@
+name: Modify and Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  modify-and-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Clone YandexMusicModPatcher
+      run: |
+        git clone https://github.com/TheKing-OfTime/YandexMusicModPatcher modified-repo
+      
+    - name: Modify LATEST_RELEASE_URL
+      run: |
+        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' modified-repo/src/main/patcher.js
+        grep "LATEST_RELEASE_URL" modified-repo/src/main/patcher.js
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        working-directory: ./modified-repo
+    
+    - name: Install dependencies
+      run: |
+        cd modified-repo
+        npm i
+    
+    - name: Build packages
+      uses: ./.modified-repo/workflows/build.yml
