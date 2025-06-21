@@ -1,4 +1,4 @@
-name: Modify and Build
+name: Modify, Build and Release
 
 on:
   workflow_call:
