@@ -74,7 +74,8 @@ jobs:
             
             ## Изменения из оригинального релиза:
             ${{ steps.get_latest_release.outputs.notes }}
-            
+          run:
+           cd modified-repo
           files: |
             out/make/**/*
             !out/make/**/RELEASES
