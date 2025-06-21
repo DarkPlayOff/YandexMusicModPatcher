@@ -14,20 +14,20 @@ jobs:
     steps:
     - name: Clone YandexMusicModPatcher
       run: |
-        git clone https://github.com/TheKing-OfTime/YandexMusicModPatcher modified-repo
+        git clone https://github.com/TheKing-Of-Time/YandexMusicModPatcher modified-repo
       
     - name: Modify LATEST_RELEASE_URL (Linux/Windows)
       if: matrix.os != 'macos-latest'
       run: |
         cd modified-repo
-        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
+        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-Of-Time/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
         grep "LATEST_RELEASE_URL" src/main/patcher.js
         
     - name: Modify LATEST_RELEASE_URL (macOS)
       if: matrix.os == 'macos-latest'
       run: |
         cd modified-repo
-        sed -i '' 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
+        sed -i '' 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-Of-Time/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
         grep "LATEST_RELEASE_URL" src/main/patcher.js
     
     - name: Set up Node.js
@@ -44,6 +44,7 @@ jobs:
       run: |
         cd modified-repo
         npm run make
+
     - name: Получить информацию о последнем релизе
       id: get_latest_release
       shell: pwsh
@@ -54,33 +55,34 @@ jobs:
           Authorization = "Bearer $env:GITHUB_TOKEN"
           "User-Agent"  = "GitHubActions"
         }
-          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/TheKing-OfTime/YandexMusicModPatcher/releases/latest"
-          $version = $response.tag_name
-          $releaseTitle = $response.name
-          $releaseNotes = $response.body
-          echo "version=$version" >> $env:GITHUB_OUTPUT
-          echo "title=$releaseTitle" >> $env:GITHUB_OUTPUT
-          echo "notes<<EOF" >> $env:GITHUB_OUTPUT
-          echo "$releaseNotes" >> $env:GITHUB_OUTPUT
-          echo "EOF" >> $env:GITHUB_OUTPUT
-          echo "Последняя версия: $version"
-          echo "Заголовок релиза: $releaseTitle"
-          echo "Описание релиза: $releaseNotes"
+        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/TheKing-Of-Time/YandexMusicModPatcher/releases/latest" -Headers $headers
+        $version = $response.tag_name
+        $releaseTitle = $response.name
+        $releaseNotes = $response.body
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+        echo "title=$releaseTitle" >> $env:GITHUB_OUTPUT
+        echo "notes<<EOF" >> $env:GITHUB_OUTPUT
+        echo "$releaseNotes" >> $env:GITHUB_OUTPUT
+        echo "EOF" >> $env:GITHUB_OUTPUT
+        echo "Последняя версия: $version"
+        echo "Заголовок релиза: $releaseTitle"
+        echo "Описание релиза: $releaseNotes"
         
     - name: Создать релиз
       id: create_release
       uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          name: "${{ steps.get_latest_release.outputs.title }}"
-          tag_name: "mod-${{ steps.get_latest_release.outputs.version }}"
-          body: |
-            # Модифицированная сборка YandexMusicModPatcher для [YandexMusicAsar](https://github.com/DarkPlayOff/YandexMusicAsar)
-            
-            Основано на версии [${{ steps.get_latest_release.outputs.title }}](https://github.com/TheKing-OfTime/YandexMusicModPatcher/releases/tag/${{ steps.get_latest_release.outputs.version }})
-            
-            ## Изменения из оригинального релиза:
-            ${{ steps.get_latest_release.outputs.notes }}
-          files: |
-            modified-repo/out/make/**/*
-          draft: false
-          fail_on_unmatched_files: true
+        name: "${{ steps.get_latest_release.outputs.title }}"
+        tag_name: "mod-${{ steps.get_latest_release.outputs.version }}"
+        body: |
+          # Модифицированная сборка YandexMusicModPatcher для [YandexMusicAsar](https://github.com/DarkPlayOff/YandexMusicAsar)
+          
+          Основано на версии [${{ steps.get_latest_release.outputs.title }}](https://github.com/TheKing-Of-Time/YandexMusicModPatcher/releases/tag/${{ steps.get_latest_release.outputs.version }})
+          
+          ## Изменения из оригинального релиза:
+          ${{ steps.get_latest_release.outputs.notes }}
+        files: modified-repo/out/make/**/*
+        draft: false
+        fail_on_unmatched_files: true
