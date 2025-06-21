@@ -44,7 +44,10 @@ jobs:
       run: |
         cd modified-repo
         npm run make
-
+    - name: Получить информацию о последнем релизе
+      id: get_latest_release
+      shell: pwsh
+      run: |
           $response = Invoke-RestMethod -Uri "https://api.github.com/repos/TheKing-OfTime/YandexMusicModPatcher/releases/latest"
           $version = $response.tag_name
           $releaseTitle = $response.name
