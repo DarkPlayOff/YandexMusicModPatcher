@@ -47,7 +47,13 @@ jobs:
     - name: Получить информацию о последнем релизе
       id: get_latest_release
       shell: pwsh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        $headers = @{
+          Authorization = "Bearer $env:GITHUB_TOKEN"
+          "User-Agent"  = "GitHubActions"
+        }
           $response = Invoke-RestMethod -Uri "https://api.github.com/repos/TheKing-OfTime/YandexMusicModPatcher/releases/latest"
           $version = $response.tag_name
           $releaseTitle = $response.name
