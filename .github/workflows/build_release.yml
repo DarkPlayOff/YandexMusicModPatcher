@@ -20,14 +20,14 @@ jobs:
       if: matrix.os != 'macos-latest'
       run: |
         cd modified-repo
-        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-Of-Time/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
+        sed -i 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
         grep "LATEST_RELEASE_URL" src/main/patcher.js
         
     - name: Modify LATEST_RELEASE_URL (macOS)
       if: matrix.os == 'macos-latest'
       run: |
         cd modified-repo
-        sed -i '' 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-Of-Time/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
+        sed -i '' 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
         grep "LATEST_RELEASE_URL" src/main/patcher.js
     
     - name: Set up Node.js
@@ -55,7 +55,7 @@ jobs:
           Authorization = "Bearer $env:GITHUB_TOKEN"
           "User-Agent"  = "GitHubActions"
         }
-        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/TheKing-Of-Time/YandexMusicModPatcher/releases/latest" -Headers $headers
+        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/TheKing-OfTime/YandexMusicModPatcher/releases/latest" -Headers $headers
         $version = $response.tag_name
         $releaseTitle = $response.name
         $releaseNotes = $response.body
