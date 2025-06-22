@@ -24,7 +24,7 @@ jobs:
         grep "LATEST_RELEASE_URL" src/main/patcher.js
         
     - name: Modify LATEST_RELEASE_URL (macOS)
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-latest' || matrix.os == 'macos-13'
       run: |
         cd modified-repo
         sed -i '' 's|const LATEST_RELEASE_URL = `https://api.github.com/repos/TheKing-OfTime/YandexMusicModClient/releases/latest`;|const LATEST_RELEASE_URL = `https://api.github.com/repos/DarkPlayOff/YandexMusicPlus/releases/latest`;|g' src/main/patcher.js
