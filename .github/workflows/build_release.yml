@@ -77,7 +77,7 @@ jobs:
         name: "${{ steps.get_latest_release.outputs.title }}"
         tag_name: "mod-${{ steps.get_latest_release.outputs.version }}"
         body: |
-          # Модифицированная сборка YandexMusicModPatcher для [YandexMusicAsar](https://github.com/DarkPlayOff/YandexMusicAsar)
+          # Модифицированная сборка [YandexMusicModPatcher](https://github.com/TheKing-OfTime/YandexMusicModPatcher) для [YandexMusicAsar](https://github.com/DarkPlayOff/YandexMusicAsar)
           
           Основано на версии [${{ steps.get_latest_release.outputs.title }}](https://github.com/TheKing-OfTime/YandexMusicModPatcher/releases/tag/${{ steps.get_latest_release.outputs.version }})
           
