@@ -2,6 +2,7 @@ name: Check for New YandexMusicModPatcher Releases
 
 permissions:
   contents: write
+  actions: write
 
 on:
   workflow_dispatch:
@@ -36,6 +37,27 @@ jobs:
             echo "В репозитории нет релизов"
             echo "our_version=none" >> $GITHUB_OUTPUT
           fi
+
+      - name: Очистить старые workflow runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          WORKFLOW_ID=$(gh api repos/${{ github.repository }}/actions/workflows | jq -r '.workflows[] | select(.name == "Check for New YandexMusicModPatcher Releases") | .id')
+          
+          if [ -z "$WORKFLOW_ID" ]; then
+            exit 0
+          fi
+
+          RUNS=$(gh api "repos/${{ github.repository }}/actions/workflows/$WORKFLOW_ID/runs?per_page=100")
+          COUNT=$(echo "$RUNS" | jq '.workflow_runs | length')
+          
+          if [ "$COUNT" -le 3 ]; then
+            exit 0
+          fi
+
+          echo "$RUNS" | jq -r '.workflow_runs[3:][] | .id' | while read ID; do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/runs/$ID"
+          done
 
       - name: Сравнить версии и решить о необходимости сборки
         id: check_versions
