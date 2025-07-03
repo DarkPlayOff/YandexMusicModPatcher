@@ -1,6 +1,5 @@
 # Модификация [YandexMusicModPatcher](https://github.com/TheKing-OfTime/YandexMusicModPatcher)
 
-## Это установщик для модификации на Яндекс Музыку [YandexMusicAsar](https://github.com/DarkPlayOff/YandexMusicAsar)
 ### YandexMusicModClient, YandexMusicModPatcher и его разработчик не связаны с Яндексом или какой-либо из их компаний, сотрудников и т.д.
 
 ## Установка
